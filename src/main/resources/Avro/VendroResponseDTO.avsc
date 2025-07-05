@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "VendorResponseDTO",
+  "namespace": "com.panda.vendor.management.entities",
+  "fields": [
+    { "name": "orderName", "type": "string" },
+    { "name": "quantity", "type": "int" },
+    { "name": "orderLocation", "type": "int" },
+    { "name": "deliverable", "type": "boolean" },
+    { "name": "messageType", "type": "string" }
+  ]
+}

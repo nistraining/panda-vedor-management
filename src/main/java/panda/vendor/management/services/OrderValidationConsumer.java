@@ -14,6 +14,7 @@ import com.panda.vendor.management.entities.VendorResponseDTO;
 
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
+import panda.vendor.management.config.SchemaRegistryUtils;
 import panda.vendor.management.dto.VendorOrderRequest;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
@@ -24,6 +25,8 @@ public class OrderValidationConsumer {
 	@Autowired
 	private KafkaTemplate<String, VendorResponseDTO> kafkaTemplate;
 	
+	@Autowired
+	private SchemaRegistryUtils schemaRegistryUtils;
 	@Value("${topic.name}")
 	private String topicName;
 
@@ -42,6 +45,12 @@ public class OrderValidationConsumer {
 			System.out.println("Failed to process the message :" +ex.getMessage());
 		}
 	}
+	
+	public void waitForSchemaRegistry() {
+		
+		int retries = 4;
+		int delay = 5000;
+	}
 
 	public void respondToOrderService(VendorOrderRequest request, boolean isDeliverable) {
 		VendorResponseDTO vendorOrderResponseDTO =new VendorResponseDTO();
@@ -50,18 +59,9 @@ public class OrderValidationConsumer {
 		vendorOrderResponseDTO.setOrderLocation(request.getOrderLocation());
 		vendorOrderResponseDTO.setDeliverable(isDeliverable);
 		vendorOrderResponseDTO.setMessageType("RESPONSE");
-//		try {
-//			sqsTemplate.send(
-//					"https://sqs.eu-central-1.amazonaws.com/489855987447/nisith-tech-queue",
-//					vendorOrderResponseDTO
-//					);
-//
-//
-//		} catch (Exception e) {
-//			System.err.println("Serialization or send error: " + e.getMessage());
-//		}
-		
 		try {
+			Thread.sleep(5000);
+			schemaRegistryUtils.waitForSchemaRegistry();
 			kafkaTemplate.send(topicName,vendorOrderResponseDTO);
 			System.out.println("Sent Vendor response to kafka topic");
 		}catch(Exception e) {
