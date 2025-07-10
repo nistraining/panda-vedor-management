@@ -4,7 +4,17 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import panda.vendor.management.services.VendorLogService;
+
+@Component
 public class SchemaRegistryUtils {
+	
+	@Autowired
+	private VendorLogService logService;
+	
 	 public boolean isSchemaRegistryAvailable() {
 	        try {
 	            URL url = new URL("http://localhost:8081/subjects");
@@ -33,10 +43,12 @@ public class SchemaRegistryUtils {
 	                Thread.sleep(delayMs);
 	            } catch (InterruptedException e) {
 	                Thread.currentThread().interrupt();
+	                logService.logMessageToCloudWatch("Interrupted while waiting for Schema Registry");
 	                System.out.println("Interrupted while waiting for Schema Registry.");
 	                return;
 	            }
 	        }
+	        logService.logMessageToCloudWatch("❌ Schema Registry not available after retries.");
 	        System.out.println("❌ Schema Registry not available after retries.");
 	    }
 	}

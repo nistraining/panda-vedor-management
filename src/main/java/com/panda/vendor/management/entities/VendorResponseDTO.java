@@ -14,13 +14,16 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -3986552507246199426L;
+  private static final long serialVersionUID = 5888383115449341105L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"VendorResponseDTO\",\"namespace\":\"com.panda.vendor.management.entities\",\"fields\":[{\"name\":\"orderName\",\"type\":\"string\"},{\"name\":\"quantity\",\"type\":\"int\"},{\"name\":\"orderLocation\",\"type\":\"int\"},{\"name\":\"deliverable\",\"type\":\"boolean\"},{\"name\":\"messageType\",\"type\":\"string\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"VendorResponseDTO\",\"namespace\":\"com.panda.vendor.management.entities\",\"fields\":[{\"name\":\"orderName\",\"type\":\"string\"},{\"name\":\"quantity\",\"type\":\"int\"},{\"name\":\"orderLocation\",\"type\":\"int\"},{\"name\":\"deliverable\",\"type\":\"boolean\"},{\"name\":\"messageType\",\"type\":\"string\"},{\"name\":\"orderId\",\"type\":\"int\",\"default\":0},{\"name\":\"createdTimestamp\",\"type\":[\"null\",{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}],\"default\":null}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
+  static {
+    MODEL$.addLogicalTypeConversion(new org.apache.avro.data.TimeConversions.TimestampMillisConversion());
+  }
 
   private static final BinaryMessageEncoder<VendorResponseDTO> ENCODER =
       new BinaryMessageEncoder<>(MODEL$, SCHEMA$);
@@ -78,6 +81,8 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
   private int orderLocation;
   private boolean deliverable;
   private java.lang.CharSequence messageType;
+  private int orderId;
+  private java.time.Instant createdTimestamp;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -93,13 +98,17 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
    * @param orderLocation The new value for orderLocation
    * @param deliverable The new value for deliverable
    * @param messageType The new value for messageType
+   * @param orderId The new value for orderId
+   * @param createdTimestamp The new value for createdTimestamp
    */
-  public VendorResponseDTO(java.lang.CharSequence orderName, java.lang.Integer quantity, java.lang.Integer orderLocation, java.lang.Boolean deliverable, java.lang.CharSequence messageType) {
+  public VendorResponseDTO(java.lang.CharSequence orderName, java.lang.Integer quantity, java.lang.Integer orderLocation, java.lang.Boolean deliverable, java.lang.CharSequence messageType, java.lang.Integer orderId, java.time.Instant createdTimestamp) {
     this.orderName = orderName;
     this.quantity = quantity;
     this.orderLocation = orderLocation;
     this.deliverable = deliverable;
     this.messageType = messageType;
+    this.orderId = orderId;
+    this.createdTimestamp = createdTimestamp;
   }
 
   @Override
@@ -117,6 +126,8 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     case 2: return orderLocation;
     case 3: return deliverable;
     case 4: return messageType;
+    case 5: return orderId;
+    case 6: return createdTimestamp;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -131,6 +142,8 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     case 2: orderLocation = (java.lang.Integer)value$; break;
     case 3: deliverable = (java.lang.Boolean)value$; break;
     case 4: messageType = (java.lang.CharSequence)value$; break;
+    case 5: orderId = (java.lang.Integer)value$; break;
+    case 6: createdTimestamp = (java.time.Instant)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -221,6 +234,40 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
   }
 
   /**
+   * Gets the value of the 'orderId' field.
+   * @return The value of the 'orderId' field.
+   */
+  public int getOrderId() {
+    return orderId;
+  }
+
+
+  /**
+   * Sets the value of the 'orderId' field.
+   * @param value the value to set.
+   */
+  public void setOrderId(int value) {
+    this.orderId = value;
+  }
+
+  /**
+   * Gets the value of the 'createdTimestamp' field.
+   * @return The value of the 'createdTimestamp' field.
+   */
+  public java.time.Instant getCreatedTimestamp() {
+    return createdTimestamp;
+  }
+
+
+  /**
+   * Sets the value of the 'createdTimestamp' field.
+   * @param value the value to set.
+   */
+  public void setCreatedTimestamp(java.time.Instant value) {
+    this.createdTimestamp = value;
+  }
+
+  /**
    * Creates a new VendorResponseDTO RecordBuilder.
    * @return A new VendorResponseDTO RecordBuilder
    */
@@ -266,6 +313,8 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     private int orderLocation;
     private boolean deliverable;
     private java.lang.CharSequence messageType;
+    private int orderId;
+    private java.time.Instant createdTimestamp;
 
     /** Creates a new Builder */
     private Builder() {
@@ -298,6 +347,14 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
         this.messageType = data().deepCopy(fields()[4].schema(), other.messageType);
         fieldSetFlags()[4] = other.fieldSetFlags()[4];
       }
+      if (isValidValue(fields()[5], other.orderId)) {
+        this.orderId = data().deepCopy(fields()[5].schema(), other.orderId);
+        fieldSetFlags()[5] = other.fieldSetFlags()[5];
+      }
+      if (isValidValue(fields()[6], other.createdTimestamp)) {
+        this.createdTimestamp = data().deepCopy(fields()[6].schema(), other.createdTimestamp);
+        fieldSetFlags()[6] = other.fieldSetFlags()[6];
+      }
     }
 
     /**
@@ -325,6 +382,14 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       if (isValidValue(fields()[4], other.messageType)) {
         this.messageType = data().deepCopy(fields()[4].schema(), other.messageType);
         fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.orderId)) {
+        this.orderId = data().deepCopy(fields()[5].schema(), other.orderId);
+        fieldSetFlags()[5] = true;
+      }
+      if (isValidValue(fields()[6], other.createdTimestamp)) {
+        this.createdTimestamp = data().deepCopy(fields()[6].schema(), other.createdTimestamp);
+        fieldSetFlags()[6] = true;
       }
     }
 
@@ -525,6 +590,85 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       return this;
     }
 
+    /**
+      * Gets the value of the 'orderId' field.
+      * @return The value.
+      */
+    public int getOrderId() {
+      return orderId;
+    }
+
+
+    /**
+      * Sets the value of the 'orderId' field.
+      * @param value The value of 'orderId'.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder setOrderId(int value) {
+      validate(fields()[5], value);
+      this.orderId = value;
+      fieldSetFlags()[5] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'orderId' field has been set.
+      * @return True if the 'orderId' field has been set, false otherwise.
+      */
+    public boolean hasOrderId() {
+      return fieldSetFlags()[5];
+    }
+
+
+    /**
+      * Clears the value of the 'orderId' field.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearOrderId() {
+      fieldSetFlags()[5] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'createdTimestamp' field.
+      * @return The value.
+      */
+    public java.time.Instant getCreatedTimestamp() {
+      return createdTimestamp;
+    }
+
+
+    /**
+      * Sets the value of the 'createdTimestamp' field.
+      * @param value The value of 'createdTimestamp'.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder setCreatedTimestamp(java.time.Instant value) {
+      validate(fields()[6], value);
+      this.createdTimestamp = value;
+      fieldSetFlags()[6] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'createdTimestamp' field has been set.
+      * @return True if the 'createdTimestamp' field has been set, false otherwise.
+      */
+    public boolean hasCreatedTimestamp() {
+      return fieldSetFlags()[6];
+    }
+
+
+    /**
+      * Clears the value of the 'createdTimestamp' field.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearCreatedTimestamp() {
+      createdTimestamp = null;
+      fieldSetFlags()[6] = false;
+      return this;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public VendorResponseDTO build() {
@@ -535,6 +679,8 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
         record.orderLocation = fieldSetFlags()[2] ? this.orderLocation : (java.lang.Integer) defaultValue(fields()[2]);
         record.deliverable = fieldSetFlags()[3] ? this.deliverable : (java.lang.Boolean) defaultValue(fields()[3]);
         record.messageType = fieldSetFlags()[4] ? this.messageType : (java.lang.CharSequence) defaultValue(fields()[4]);
+        record.orderId = fieldSetFlags()[5] ? this.orderId : (java.lang.Integer) defaultValue(fields()[5]);
+        record.createdTimestamp = fieldSetFlags()[6] ? this.createdTimestamp : (java.time.Instant) defaultValue(fields()[6]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -562,67 +708,6 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     READER$.read(this, SpecificData.getDecoder(in));
   }
 
-  @Override protected boolean hasCustomCoders() { return true; }
-
-  @Override public void customEncode(org.apache.avro.io.Encoder out)
-    throws java.io.IOException
-  {
-    out.writeString(this.orderName);
-
-    out.writeInt(this.quantity);
-
-    out.writeInt(this.orderLocation);
-
-    out.writeBoolean(this.deliverable);
-
-    out.writeString(this.messageType);
-
-  }
-
-  @Override public void customDecode(org.apache.avro.io.ResolvingDecoder in)
-    throws java.io.IOException
-  {
-    org.apache.avro.Schema.Field[] fieldOrder = in.readFieldOrderIfDiff();
-    if (fieldOrder == null) {
-      this.orderName = in.readString(this.orderName instanceof Utf8 ? (Utf8)this.orderName : null);
-
-      this.quantity = in.readInt();
-
-      this.orderLocation = in.readInt();
-
-      this.deliverable = in.readBoolean();
-
-      this.messageType = in.readString(this.messageType instanceof Utf8 ? (Utf8)this.messageType : null);
-
-    } else {
-      for (int i = 0; i < 5; i++) {
-        switch (fieldOrder[i].pos()) {
-        case 0:
-          this.orderName = in.readString(this.orderName instanceof Utf8 ? (Utf8)this.orderName : null);
-          break;
-
-        case 1:
-          this.quantity = in.readInt();
-          break;
-
-        case 2:
-          this.orderLocation = in.readInt();
-          break;
-
-        case 3:
-          this.deliverable = in.readBoolean();
-          break;
-
-        case 4:
-          this.messageType = in.readString(this.messageType instanceof Utf8 ? (Utf8)this.messageType : null);
-          break;
-
-        default:
-          throw new java.io.IOException("Corrupt ResolvingDecoder.");
-        }
-      }
-    }
-  }
 }
 
 

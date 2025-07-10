@@ -7,6 +7,12 @@
     { "name": "quantity", "type": "int" },
     { "name": "orderLocation", "type": "int" },
     { "name": "deliverable", "type": "boolean" },
-    { "name": "messageType", "type": "string" }
+    { "name": "messageType", "type": "string" },
+    { "name": "orderId", "type": "int", "default": 0 },
+    {
+      "name": "createdTimestamp",
+      "type": ["null", { "type": "long", "logicalType": "timestamp-millis" }],
+      "default": null
+    }
   ]
 }
