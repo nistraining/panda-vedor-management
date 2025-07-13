@@ -43,6 +43,7 @@ public class VendorController {
   
 	@GetMapping("/getAllVendors")
 	public ResponseEntity<List<Vendor>> getAllVendors() {
+		logService.logMessageToCloudWatch("Inside get all vendors controler");
 	    List<Vendor> vendors = vendorService.getAllVendors();
 	    return new ResponseEntity<>(vendors, HttpStatus.OK);
 	}

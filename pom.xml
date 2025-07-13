@@ -159,8 +159,6 @@
 			<artifactId>monitoring-interceptors</artifactId>
 			<version>7.6.0</version>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
