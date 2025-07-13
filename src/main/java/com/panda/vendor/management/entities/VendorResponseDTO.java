@@ -14,10 +14,10 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 5888383115449341105L;
+  private static final long serialVersionUID = -4929469444088562073L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"VendorResponseDTO\",\"namespace\":\"com.panda.vendor.management.entities\",\"fields\":[{\"name\":\"orderName\",\"type\":\"string\"},{\"name\":\"quantity\",\"type\":\"int\"},{\"name\":\"orderLocation\",\"type\":\"int\"},{\"name\":\"deliverable\",\"type\":\"boolean\"},{\"name\":\"messageType\",\"type\":\"string\"},{\"name\":\"orderId\",\"type\":\"int\",\"default\":0},{\"name\":\"createdTimestamp\",\"type\":[\"null\",{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}],\"default\":null}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"VendorResponseDTO\",\"namespace\":\"com.panda.vendor.management.entities\",\"fields\":[{\"name\":\"vendorId\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"orderName\",\"type\":\"string\"},{\"name\":\"quantity\",\"type\":\"int\"},{\"name\":\"orderLocation\",\"type\":\"int\"},{\"name\":\"deliverable\",\"type\":\"boolean\"},{\"name\":\"messageType\",\"type\":\"string\"},{\"name\":\"orderId\",\"type\":\"int\",\"default\":0},{\"name\":\"createdTimestamp\",\"type\":[\"null\",{\"type\":\"long\",\"logicalType\":\"timestamp-millis\"}],\"default\":null},{\"name\":\"rejectionReasons\",\"type\":[\"null\",{\"type\":\"array\",\"items\":\"string\"}],\"default\":null}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
@@ -76,6 +76,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     return DECODER.decode(b);
   }
 
+  private java.lang.CharSequence vendorId;
   private java.lang.CharSequence orderName;
   private int quantity;
   private int orderLocation;
@@ -83,6 +84,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
   private java.lang.CharSequence messageType;
   private int orderId;
   private java.time.Instant createdTimestamp;
+  private java.util.List<java.lang.CharSequence> rejectionReasons;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -93,6 +95,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
 
   /**
    * All-args constructor.
+   * @param vendorId The new value for vendorId
    * @param orderName The new value for orderName
    * @param quantity The new value for quantity
    * @param orderLocation The new value for orderLocation
@@ -100,8 +103,10 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
    * @param messageType The new value for messageType
    * @param orderId The new value for orderId
    * @param createdTimestamp The new value for createdTimestamp
+   * @param rejectionReasons The new value for rejectionReasons
    */
-  public VendorResponseDTO(java.lang.CharSequence orderName, java.lang.Integer quantity, java.lang.Integer orderLocation, java.lang.Boolean deliverable, java.lang.CharSequence messageType, java.lang.Integer orderId, java.time.Instant createdTimestamp) {
+  public VendorResponseDTO(java.lang.CharSequence vendorId, java.lang.CharSequence orderName, java.lang.Integer quantity, java.lang.Integer orderLocation, java.lang.Boolean deliverable, java.lang.CharSequence messageType, java.lang.Integer orderId, java.time.Instant createdTimestamp, java.util.List<java.lang.CharSequence> rejectionReasons) {
+    this.vendorId = vendorId;
     this.orderName = orderName;
     this.quantity = quantity;
     this.orderLocation = orderLocation;
@@ -109,6 +114,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     this.messageType = messageType;
     this.orderId = orderId;
     this.createdTimestamp = createdTimestamp;
+    this.rejectionReasons = rejectionReasons;
   }
 
   @Override
@@ -121,13 +127,15 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
   @Override
   public java.lang.Object get(int field$) {
     switch (field$) {
-    case 0: return orderName;
-    case 1: return quantity;
-    case 2: return orderLocation;
-    case 3: return deliverable;
-    case 4: return messageType;
-    case 5: return orderId;
-    case 6: return createdTimestamp;
+    case 0: return vendorId;
+    case 1: return orderName;
+    case 2: return quantity;
+    case 3: return orderLocation;
+    case 4: return deliverable;
+    case 5: return messageType;
+    case 6: return orderId;
+    case 7: return createdTimestamp;
+    case 8: return rejectionReasons;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -137,15 +145,34 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: orderName = (java.lang.CharSequence)value$; break;
-    case 1: quantity = (java.lang.Integer)value$; break;
-    case 2: orderLocation = (java.lang.Integer)value$; break;
-    case 3: deliverable = (java.lang.Boolean)value$; break;
-    case 4: messageType = (java.lang.CharSequence)value$; break;
-    case 5: orderId = (java.lang.Integer)value$; break;
-    case 6: createdTimestamp = (java.time.Instant)value$; break;
+    case 0: vendorId = (java.lang.CharSequence)value$; break;
+    case 1: orderName = (java.lang.CharSequence)value$; break;
+    case 2: quantity = (java.lang.Integer)value$; break;
+    case 3: orderLocation = (java.lang.Integer)value$; break;
+    case 4: deliverable = (java.lang.Boolean)value$; break;
+    case 5: messageType = (java.lang.CharSequence)value$; break;
+    case 6: orderId = (java.lang.Integer)value$; break;
+    case 7: createdTimestamp = (java.time.Instant)value$; break;
+    case 8: rejectionReasons = (java.util.List<java.lang.CharSequence>)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
+  }
+
+  /**
+   * Gets the value of the 'vendorId' field.
+   * @return The value of the 'vendorId' field.
+   */
+  public java.lang.CharSequence getVendorId() {
+    return vendorId;
+  }
+
+
+  /**
+   * Sets the value of the 'vendorId' field.
+   * @param value the value to set.
+   */
+  public void setVendorId(java.lang.CharSequence value) {
+    this.vendorId = value;
   }
 
   /**
@@ -268,6 +295,23 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
   }
 
   /**
+   * Gets the value of the 'rejectionReasons' field.
+   * @return The value of the 'rejectionReasons' field.
+   */
+  public java.util.List<java.lang.CharSequence> getRejectionReasons() {
+    return rejectionReasons;
+  }
+
+
+  /**
+   * Sets the value of the 'rejectionReasons' field.
+   * @param value the value to set.
+   */
+  public void setRejectionReasons(java.util.List<java.lang.CharSequence> value) {
+    this.rejectionReasons = value;
+  }
+
+  /**
    * Creates a new VendorResponseDTO RecordBuilder.
    * @return A new VendorResponseDTO RecordBuilder
    */
@@ -308,6 +352,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<VendorResponseDTO>
     implements org.apache.avro.data.RecordBuilder<VendorResponseDTO> {
 
+    private java.lang.CharSequence vendorId;
     private java.lang.CharSequence orderName;
     private int quantity;
     private int orderLocation;
@@ -315,6 +360,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     private java.lang.CharSequence messageType;
     private int orderId;
     private java.time.Instant createdTimestamp;
+    private java.util.List<java.lang.CharSequence> rejectionReasons;
 
     /** Creates a new Builder */
     private Builder() {
@@ -327,33 +373,41 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
      */
     private Builder(com.panda.vendor.management.entities.VendorResponseDTO.Builder other) {
       super(other);
-      if (isValidValue(fields()[0], other.orderName)) {
-        this.orderName = data().deepCopy(fields()[0].schema(), other.orderName);
+      if (isValidValue(fields()[0], other.vendorId)) {
+        this.vendorId = data().deepCopy(fields()[0].schema(), other.vendorId);
         fieldSetFlags()[0] = other.fieldSetFlags()[0];
       }
-      if (isValidValue(fields()[1], other.quantity)) {
-        this.quantity = data().deepCopy(fields()[1].schema(), other.quantity);
+      if (isValidValue(fields()[1], other.orderName)) {
+        this.orderName = data().deepCopy(fields()[1].schema(), other.orderName);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
-      if (isValidValue(fields()[2], other.orderLocation)) {
-        this.orderLocation = data().deepCopy(fields()[2].schema(), other.orderLocation);
+      if (isValidValue(fields()[2], other.quantity)) {
+        this.quantity = data().deepCopy(fields()[2].schema(), other.quantity);
         fieldSetFlags()[2] = other.fieldSetFlags()[2];
       }
-      if (isValidValue(fields()[3], other.deliverable)) {
-        this.deliverable = data().deepCopy(fields()[3].schema(), other.deliverable);
+      if (isValidValue(fields()[3], other.orderLocation)) {
+        this.orderLocation = data().deepCopy(fields()[3].schema(), other.orderLocation);
         fieldSetFlags()[3] = other.fieldSetFlags()[3];
       }
-      if (isValidValue(fields()[4], other.messageType)) {
-        this.messageType = data().deepCopy(fields()[4].schema(), other.messageType);
+      if (isValidValue(fields()[4], other.deliverable)) {
+        this.deliverable = data().deepCopy(fields()[4].schema(), other.deliverable);
         fieldSetFlags()[4] = other.fieldSetFlags()[4];
       }
-      if (isValidValue(fields()[5], other.orderId)) {
-        this.orderId = data().deepCopy(fields()[5].schema(), other.orderId);
+      if (isValidValue(fields()[5], other.messageType)) {
+        this.messageType = data().deepCopy(fields()[5].schema(), other.messageType);
         fieldSetFlags()[5] = other.fieldSetFlags()[5];
       }
-      if (isValidValue(fields()[6], other.createdTimestamp)) {
-        this.createdTimestamp = data().deepCopy(fields()[6].schema(), other.createdTimestamp);
+      if (isValidValue(fields()[6], other.orderId)) {
+        this.orderId = data().deepCopy(fields()[6].schema(), other.orderId);
         fieldSetFlags()[6] = other.fieldSetFlags()[6];
+      }
+      if (isValidValue(fields()[7], other.createdTimestamp)) {
+        this.createdTimestamp = data().deepCopy(fields()[7].schema(), other.createdTimestamp);
+        fieldSetFlags()[7] = other.fieldSetFlags()[7];
+      }
+      if (isValidValue(fields()[8], other.rejectionReasons)) {
+        this.rejectionReasons = data().deepCopy(fields()[8].schema(), other.rejectionReasons);
+        fieldSetFlags()[8] = other.fieldSetFlags()[8];
       }
     }
 
@@ -363,34 +417,82 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
      */
     private Builder(com.panda.vendor.management.entities.VendorResponseDTO other) {
       super(SCHEMA$, MODEL$);
-      if (isValidValue(fields()[0], other.orderName)) {
-        this.orderName = data().deepCopy(fields()[0].schema(), other.orderName);
+      if (isValidValue(fields()[0], other.vendorId)) {
+        this.vendorId = data().deepCopy(fields()[0].schema(), other.vendorId);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.quantity)) {
-        this.quantity = data().deepCopy(fields()[1].schema(), other.quantity);
+      if (isValidValue(fields()[1], other.orderName)) {
+        this.orderName = data().deepCopy(fields()[1].schema(), other.orderName);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.orderLocation)) {
-        this.orderLocation = data().deepCopy(fields()[2].schema(), other.orderLocation);
+      if (isValidValue(fields()[2], other.quantity)) {
+        this.quantity = data().deepCopy(fields()[2].schema(), other.quantity);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.deliverable)) {
-        this.deliverable = data().deepCopy(fields()[3].schema(), other.deliverable);
+      if (isValidValue(fields()[3], other.orderLocation)) {
+        this.orderLocation = data().deepCopy(fields()[3].schema(), other.orderLocation);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.messageType)) {
-        this.messageType = data().deepCopy(fields()[4].schema(), other.messageType);
+      if (isValidValue(fields()[4], other.deliverable)) {
+        this.deliverable = data().deepCopy(fields()[4].schema(), other.deliverable);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.orderId)) {
-        this.orderId = data().deepCopy(fields()[5].schema(), other.orderId);
+      if (isValidValue(fields()[5], other.messageType)) {
+        this.messageType = data().deepCopy(fields()[5].schema(), other.messageType);
         fieldSetFlags()[5] = true;
       }
-      if (isValidValue(fields()[6], other.createdTimestamp)) {
-        this.createdTimestamp = data().deepCopy(fields()[6].schema(), other.createdTimestamp);
+      if (isValidValue(fields()[6], other.orderId)) {
+        this.orderId = data().deepCopy(fields()[6].schema(), other.orderId);
         fieldSetFlags()[6] = true;
       }
+      if (isValidValue(fields()[7], other.createdTimestamp)) {
+        this.createdTimestamp = data().deepCopy(fields()[7].schema(), other.createdTimestamp);
+        fieldSetFlags()[7] = true;
+      }
+      if (isValidValue(fields()[8], other.rejectionReasons)) {
+        this.rejectionReasons = data().deepCopy(fields()[8].schema(), other.rejectionReasons);
+        fieldSetFlags()[8] = true;
+      }
+    }
+
+    /**
+      * Gets the value of the 'vendorId' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getVendorId() {
+      return vendorId;
+    }
+
+
+    /**
+      * Sets the value of the 'vendorId' field.
+      * @param value The value of 'vendorId'.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder setVendorId(java.lang.CharSequence value) {
+      validate(fields()[0], value);
+      this.vendorId = value;
+      fieldSetFlags()[0] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'vendorId' field has been set.
+      * @return True if the 'vendorId' field has been set, false otherwise.
+      */
+    public boolean hasVendorId() {
+      return fieldSetFlags()[0];
+    }
+
+
+    /**
+      * Clears the value of the 'vendorId' field.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearVendorId() {
+      vendorId = null;
+      fieldSetFlags()[0] = false;
+      return this;
     }
 
     /**
@@ -408,9 +510,9 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder setOrderName(java.lang.CharSequence value) {
-      validate(fields()[0], value);
+      validate(fields()[1], value);
       this.orderName = value;
-      fieldSetFlags()[0] = true;
+      fieldSetFlags()[1] = true;
       return this;
     }
 
@@ -419,7 +521,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return True if the 'orderName' field has been set, false otherwise.
       */
     public boolean hasOrderName() {
-      return fieldSetFlags()[0];
+      return fieldSetFlags()[1];
     }
 
 
@@ -429,7 +531,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearOrderName() {
       orderName = null;
-      fieldSetFlags()[0] = false;
+      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -448,9 +550,9 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder setQuantity(int value) {
-      validate(fields()[1], value);
+      validate(fields()[2], value);
       this.quantity = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -459,7 +561,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return True if the 'quantity' field has been set, false otherwise.
       */
     public boolean hasQuantity() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[2];
     }
 
 
@@ -468,7 +570,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearQuantity() {
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -487,9 +589,9 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder setOrderLocation(int value) {
-      validate(fields()[2], value);
+      validate(fields()[3], value);
       this.orderLocation = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -498,7 +600,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return True if the 'orderLocation' field has been set, false otherwise.
       */
     public boolean hasOrderLocation() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[3];
     }
 
 
@@ -507,7 +609,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearOrderLocation() {
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -526,9 +628,9 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder setDeliverable(boolean value) {
-      validate(fields()[3], value);
+      validate(fields()[4], value);
       this.deliverable = value;
-      fieldSetFlags()[3] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -537,7 +639,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return True if the 'deliverable' field has been set, false otherwise.
       */
     public boolean hasDeliverable() {
-      return fieldSetFlags()[3];
+      return fieldSetFlags()[4];
     }
 
 
@@ -546,7 +648,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearDeliverable() {
-      fieldSetFlags()[3] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -565,9 +667,9 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder setMessageType(java.lang.CharSequence value) {
-      validate(fields()[4], value);
+      validate(fields()[5], value);
       this.messageType = value;
-      fieldSetFlags()[4] = true;
+      fieldSetFlags()[5] = true;
       return this;
     }
 
@@ -576,7 +678,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return True if the 'messageType' field has been set, false otherwise.
       */
     public boolean hasMessageType() {
-      return fieldSetFlags()[4];
+      return fieldSetFlags()[5];
     }
 
 
@@ -586,7 +688,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearMessageType() {
       messageType = null;
-      fieldSetFlags()[4] = false;
+      fieldSetFlags()[5] = false;
       return this;
     }
 
@@ -605,9 +707,9 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder setOrderId(int value) {
-      validate(fields()[5], value);
+      validate(fields()[6], value);
       this.orderId = value;
-      fieldSetFlags()[5] = true;
+      fieldSetFlags()[6] = true;
       return this;
     }
 
@@ -616,7 +718,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return True if the 'orderId' field has been set, false otherwise.
       */
     public boolean hasOrderId() {
-      return fieldSetFlags()[5];
+      return fieldSetFlags()[6];
     }
 
 
@@ -625,7 +727,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearOrderId() {
-      fieldSetFlags()[5] = false;
+      fieldSetFlags()[6] = false;
       return this;
     }
 
@@ -644,9 +746,9 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return This builder.
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder setCreatedTimestamp(java.time.Instant value) {
-      validate(fields()[6], value);
+      validate(fields()[7], value);
       this.createdTimestamp = value;
-      fieldSetFlags()[6] = true;
+      fieldSetFlags()[7] = true;
       return this;
     }
 
@@ -655,7 +757,7 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       * @return True if the 'createdTimestamp' field has been set, false otherwise.
       */
     public boolean hasCreatedTimestamp() {
-      return fieldSetFlags()[6];
+      return fieldSetFlags()[7];
     }
 
 
@@ -665,7 +767,47 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
       */
     public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearCreatedTimestamp() {
       createdTimestamp = null;
-      fieldSetFlags()[6] = false;
+      fieldSetFlags()[7] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'rejectionReasons' field.
+      * @return The value.
+      */
+    public java.util.List<java.lang.CharSequence> getRejectionReasons() {
+      return rejectionReasons;
+    }
+
+
+    /**
+      * Sets the value of the 'rejectionReasons' field.
+      * @param value The value of 'rejectionReasons'.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder setRejectionReasons(java.util.List<java.lang.CharSequence> value) {
+      validate(fields()[8], value);
+      this.rejectionReasons = value;
+      fieldSetFlags()[8] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'rejectionReasons' field has been set.
+      * @return True if the 'rejectionReasons' field has been set, false otherwise.
+      */
+    public boolean hasRejectionReasons() {
+      return fieldSetFlags()[8];
+    }
+
+
+    /**
+      * Clears the value of the 'rejectionReasons' field.
+      * @return This builder.
+      */
+    public com.panda.vendor.management.entities.VendorResponseDTO.Builder clearRejectionReasons() {
+      rejectionReasons = null;
+      fieldSetFlags()[8] = false;
       return this;
     }
 
@@ -674,13 +816,15 @@ public class VendorResponseDTO extends org.apache.avro.specific.SpecificRecordBa
     public VendorResponseDTO build() {
       try {
         VendorResponseDTO record = new VendorResponseDTO();
-        record.orderName = fieldSetFlags()[0] ? this.orderName : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.quantity = fieldSetFlags()[1] ? this.quantity : (java.lang.Integer) defaultValue(fields()[1]);
-        record.orderLocation = fieldSetFlags()[2] ? this.orderLocation : (java.lang.Integer) defaultValue(fields()[2]);
-        record.deliverable = fieldSetFlags()[3] ? this.deliverable : (java.lang.Boolean) defaultValue(fields()[3]);
-        record.messageType = fieldSetFlags()[4] ? this.messageType : (java.lang.CharSequence) defaultValue(fields()[4]);
-        record.orderId = fieldSetFlags()[5] ? this.orderId : (java.lang.Integer) defaultValue(fields()[5]);
-        record.createdTimestamp = fieldSetFlags()[6] ? this.createdTimestamp : (java.time.Instant) defaultValue(fields()[6]);
+        record.vendorId = fieldSetFlags()[0] ? this.vendorId : (java.lang.CharSequence) defaultValue(fields()[0]);
+        record.orderName = fieldSetFlags()[1] ? this.orderName : (java.lang.CharSequence) defaultValue(fields()[1]);
+        record.quantity = fieldSetFlags()[2] ? this.quantity : (java.lang.Integer) defaultValue(fields()[2]);
+        record.orderLocation = fieldSetFlags()[3] ? this.orderLocation : (java.lang.Integer) defaultValue(fields()[3]);
+        record.deliverable = fieldSetFlags()[4] ? this.deliverable : (java.lang.Boolean) defaultValue(fields()[4]);
+        record.messageType = fieldSetFlags()[5] ? this.messageType : (java.lang.CharSequence) defaultValue(fields()[5]);
+        record.orderId = fieldSetFlags()[6] ? this.orderId : (java.lang.Integer) defaultValue(fields()[6]);
+        record.createdTimestamp = fieldSetFlags()[7] ? this.createdTimestamp : (java.time.Instant) defaultValue(fields()[7]);
+        record.rejectionReasons = fieldSetFlags()[8] ? this.rejectionReasons : (java.util.List<java.lang.CharSequence>) defaultValue(fields()[8]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;

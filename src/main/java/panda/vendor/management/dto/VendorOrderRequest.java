@@ -10,6 +10,7 @@ public class VendorOrderRequest {
     private int quantity;
     private int orderLocation;
     private Instant createdTimeStamp;
+    private String vendorId;
 
     
     
@@ -22,7 +23,7 @@ public class VendorOrderRequest {
 
 
 	public VendorOrderRequest(String messageType, String orderName, int orderId, int quantity, int orderLocation,
-			Instant createdTimeStamp) {
+			Instant createdTimeStamp, String vendorId) {
 		super();
 		this.messageType = messageType;
 		this.orderName = orderName;
@@ -30,6 +31,7 @@ public class VendorOrderRequest {
 		this.quantity = quantity;
 		this.orderLocation = orderLocation;
 		this.createdTimeStamp = createdTimeStamp;
+		this.vendorId=vendorId;
 	}
 
 
@@ -115,6 +117,22 @@ public class VendorOrderRequest {
 	public void setCreatedTimeStamp(Instant createdTimeStamp) {
 		this.createdTimeStamp = createdTimeStamp;
 	}
+
+
+
+
+	public String getVendorId() {
+		return vendorId;
+	}
+
+
+
+
+	public void setVendorId(String vendorId) {
+		this.vendorId = vendorId;
+	}
+	
+	
 	
 	
 	

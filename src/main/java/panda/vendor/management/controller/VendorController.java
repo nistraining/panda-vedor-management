@@ -1,6 +1,8 @@
 package panda.vendor.management.controller;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,10 +78,13 @@ public class VendorController {
 	
 	@GetMapping("/vendors/resolve")
 	public ResponseEntity<?> resolveVendor(@RequestParam String vendorName, @RequestParam int location) {
-	   System.out.println("Inside the controller");
-		
+	   logService.logMessageToCloudWatch("New Order from :"+location +"for :"+vendorName);
+	   String decodedVendorName = URLDecoder.decode(vendorName, StandardCharsets.UTF_8);
+	   logService.logMessageToCloudWatch("After decoding :"+location +"for :"+decodedVendorName);
+
+	   		
 		try {
-	        Optional<Vendor> resolved = vendorService.resolveVendorByNameAndLocation(vendorName, location);
+	        Optional<Vendor> resolved = vendorService.resolveVendorByNameAndLocation(decodedVendorName, location);
 
 	        if (resolved.isPresent()) {
 	            return ResponseEntity.ok(resolved.get());

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +23,25 @@ import panda.vendor.management.dto.VendorBatchResponseDTO;
 import panda.vendor.management.entities.Vendor;
 import panda.vendor.management.exceptions.VendorNotFoundException;
 import panda.vendor.management.repository.VendorRepository;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
+import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.GetItemResponse;
 
 @Service
 @Slf4j
 public class VendorServices {
+	
+	@Autowired
+    private DynamoDbClient dynamoDbClient;
+
+	
+	@Value("${dynamodb.vendor.table}")
+	private String vendorTable;
+
+	@Autowired
+	private VendorLogService logService;
 	
 	private static final Logger log = LoggerFactory.getLogger(VendorServices.class);
 
@@ -40,6 +56,13 @@ public class VendorServices {
 		}
 		return vendor;
 	}
+	
+	private List<Integer> lastFetchedZipCodes = new ArrayList<>();
+
+	public List<Integer> getLastFetchedZipCodes() {
+	    return lastFetchedZipCodes;
+	}
+
 	
 	public List<Vendor> getAllVendors(){
 		return vendorRepo.findAllVendors();
@@ -126,8 +149,9 @@ public class VendorServices {
 	
 	public Optional<Vendor> resolveVendorByNameAndLocation(String vendorName, int location) {
 		System.out.println("Inside vendor service");
+		String vendorEncoded = vendorName.trim().toLowerCase().replaceAll("\\s+", " ");
 	    try {
-	        return vendorRepo.findByNameAndLocation(vendorName, location);
+	        return vendorRepo.findByNameAndLocation(vendorEncoded, location);
 	    } catch (Exception ex) {
 	        log.error("Error while resolving vendor. Name={}, Location={}, Reason={}", 
 	                  vendorName, location, ex.getMessage());
@@ -135,6 +159,50 @@ public class VendorServices {
 	    }
 	}
 	
+	public Optional<String> deliveryvalidation(String vendorId) {
+	    logService.logMessageToCloudWatch("[Vendor-Service] Validating delivery window for vendor: " + vendorId);
+	    try {
+	        GetItemRequest request = GetItemRequest.builder()
+	            .tableName(vendorTable)
+	            .key(Map.of("vendorId", AttributeValue.fromS(vendorId)))
+	            .projectionExpression("preferredDeliveryWindow,serviceableZipCodes")
+	            .build();
+
+	        GetItemResponse response = dynamoDbClient.getItem(request);
+
+	        if (response.hasItem()) {
+	            Map<String, AttributeValue> item = response.item();
+
+	            // 🌅 Preferred Delivery Window
+	            String preferredWindow = Optional.ofNullable(item.get("preferredDeliveryWindow"))
+	                                             .map(AttributeValue::s)
+	                                             .orElse("UNKNOWN");
+
+	            // 📍 Serviceable Zip Codes
+	            if (item.containsKey("serviceableZipCodes")) {
+	                List<Integer> zipCodes = item.get("serviceableZipCodes").l().stream()
+	                    .map(AttributeValue::n)
+	                    .map(Integer::parseInt)
+	                    .collect(Collectors.toList());
+
+	                this.lastFetchedZipCodes = zipCodes;
+	                logService.logMessageToCloudWatch("[Vendor-Service] Serviceable zip codes for vendorId=" + vendorId + ": " + zipCodes);
+	            }
+
+	            return Optional.of(preferredWindow);
+	        }
+	    } catch (Exception e) {
+	        System.err.println("Failed to fetch delivery config for vendorId=" + vendorId + ": " + e.getMessage());
+	    }
+
+	    this.lastFetchedZipCodes = new ArrayList<>(); // clear if error or not found
+	    return Optional.empty();
+	}
+
+	
+}
+
+	
 	
 
-}
+
