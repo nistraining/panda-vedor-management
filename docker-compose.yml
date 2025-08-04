@@ -8,8 +8,10 @@ services:
     ports:
       - "2181:2181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_TICK_TIME: "2000"
+    networks:
+      - kafka-net
 
   broker:
     image: confluentinc/cp-server:5.4.0
@@ -20,19 +22,26 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_BROKER_ID: 1
+      KAFKA_BROKER_ID: "1"
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
-      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT"
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:29092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://broker:29092"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: "1"
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: "broker:29092"
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: "1"
       CONFLUENT_METRICS_ENABLE: "true"
       CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
+    networks:
+      - kafka-net
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:29092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   schema-registry:
     image: confluentinc/cp-schema-registry:5.4.0
@@ -43,9 +52,16 @@ services:
     ports:
       - "8081:8081"
     environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://broker:29092
+      SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://broker:29092"
+    networks:
+      - kafka-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/subjects"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:5.4.0
@@ -57,15 +73,17 @@ services:
     ports:
       - "9021:9021"
     environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker:29092
-      CONTROL_CENTER_KAFKA_broker_BOOTSTRAP_SERVERS: broker:29092
-      CONTROL_CENTER_KAFKA_broker_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-      PORT: 9021
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: "broker:29092"
+      CONTROL_CENTER_KAFKA_broker_BOOTSTRAP_SERVERS: "broker:29092"
+      CONTROL_CENTER_KAFKA_broker_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      CONTROL_CENTER_REPLICATION_FACTOR: "1"
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: "1"
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: "1"
+      CONFLUENT_METRICS_TOPIC_REPLICATION: "1"
+      PORT: "9021"
+    networks:
+      - kafka-net
 
   kafka-tools:
     image: confluentinc/cp-kafka:5.4.0
@@ -74,7 +92,60 @@ services:
     command: ["tail", "-f", "/dev/null"]
     depends_on:
       - broker
+    networks:
+      - kafka-net
+
+  vendor-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: panda-vendor-service:latest
+    container_name: panda-vendor-service
+    ports:
+      - "5000:5000"
+    environment:
+      SPRING_APPLICATION_NAME: "PANDA-VENDOR-MANAGEMENT"
+      SERVER_PORT: "5000"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://hungry-panda-eureka-server:8761/eureka/"
+
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "broker:29092"
+      SPRING_KAFKA_CONSUMER_GROUP_ID: "panda-vendor-group"
+      SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET: "earliest"
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: "org.apache.kafka.common.serialization.StringSerializer"
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+      SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER: "org.apache.kafka.common.serialization.StringDeserializer"
+      SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      SPRING_KAFKA_PROPERTIES_VALUE_SUBJECT_NAME_STRATEGY: "io.confluent.kafka.serializers.subject.RecordNameStrategy"
+      SPRING_KAFKA_PROPERTIES_SPECIFIC_AVRO_READER: "true"
+
+      AWS_ACCESS_KEY_ID_FILE: "/run/secrets/aws_access"
+      AWS_SECRET_ACCESS_KEY_FILE: "/run/secrets/aws_secret"
+      AWS_REGION: "eu-central-1"
+    secrets:
+      - aws_access
+      - aws_secret
+    networks:
+      - kafka-net
+      - panda-net
+    depends_on:
+      broker:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+secrets:
+  aws_access:
+    file: ./aws_access.txt
+  aws_secret:
+    file: ./aws_secret.txt
 
 networks:
-  default:
-    name: kafka-net
+  kafka-net:
+  panda-net:
+    external: true

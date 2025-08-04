@@ -25,7 +25,7 @@ import panda.vendor.management.services.VendorLogService;
 import panda.vendor.management.services.VendorServices;
 
 @RestController
-@RequestMapping("/vendor")
+@RequestMapping("/vendors")
 public class VendorController {
 	
     @Autowired

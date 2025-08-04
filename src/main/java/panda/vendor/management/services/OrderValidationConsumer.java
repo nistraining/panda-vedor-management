@@ -119,6 +119,7 @@ public class OrderValidationConsumer {
 	    } catch (Exception ex) {
 	        logService.logMessageToCloudWatch("[Vendor-Service] Failed to process orderId=" + orderId +
 	            ", corrId=" + correlationId + ", error=" + ex.getMessage());
+
 	        throw ex;
 	    } finally {
 	        MDC.clear();
