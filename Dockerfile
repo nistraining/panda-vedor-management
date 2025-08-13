@@ -8,6 +8,9 @@ LABEL service="vendor-management"
 # Install netcat for health checks
 RUN apt-get update && apt-get install -y netcat
 
+# Ensure Kubernetes can mount service account tokens
+RUN mkdir -p /run/secrets /var/run/secrets && chmod -R 755 /run /var/run
+
 EXPOSE 5000
 
 COPY target/panda-vendor-management-0.0.1-SNAPSHOT.war panda-vendor-management.war
