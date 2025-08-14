@@ -1,0 +1,263 @@
+#---
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: kafka-demo
+#---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: aws-secrets
+#  namespace: kafka-demo
+#type: Opaque
+#data:
+#  aws_access: QUtJQVhFRE5SRjMzVlBTUDVNT04NCg==
+#  aws_secret: ZFNTZTlkN1FROFZocTV3cFcvSjBTRjRHVXlTMVZFcGxLcnpQQnYxSg0K
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: zookeeper
+#  namespace: kafka-demo
+#  labels:
+#    app: zookeeper
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: zookeeper
+#  template:
+#    metadata:
+#      labels:
+#        app: zookeeper
+#    spec:
+#      containers:
+#        - name: zookeeper
+#          image: confluentinc/cp-zookeeper:5.4.0
+#          ports:
+#            - containerPort: 2181
+#          env:
+#            - name: ZOOKEEPER_CLIENT_PORT
+#              value: "2181"
+#            - name: ZOOKEEPER_TICK_TIME
+#              value: "2000"
+#          readinessProbe:
+#            tcpSocket:
+#              port: 2181
+#            initialDelaySeconds: 10
+#            periodSeconds: 10
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: zookeeper
+#  namespace: kafka-demo
+#spec:
+#  selector:
+#    app: zookeeper
+#  ports:
+#    - port: 2181
+#      targetPort: 2181
+#  type: ClusterIP
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: kafka-broker
+#  namespace: kafka-demo
+#  labels:
+#    app: kafka-broker
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: kafka-broker
+#  template:
+#    metadata:
+#      labels:
+#        app: kafka-broker
+#    spec:
+#      containers:
+#        - name: kafka
+#          image: confluentinc/cp-server:5.4.0
+#          ports:
+#            - containerPort: 29092
+#          env:
+#            - name: KAFKA_BROKER_ID
+#              value: "1"
+#            - name: KAFKA_ZOOKEEPER_CONNECT
+#              value: "zookeeper.kafka-demo.svc.cluster.local:2181"
+#            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+#              value: "PLAINTEXT:PLAINTEXT"
+#            - name: KAFKA_LISTENERS
+#              value: "PLAINTEXT://0.0.0.0:29092"
+#            - name: KAFKA_ADVERTISED_LISTENERS
+#              value: "PLAINTEXT://kafka-broker.kafka-demo.svc.cluster.local:29092"
+#            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+#              value: "1"
+#            - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+#              value: "0"
+#            - name: KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR
+#              value: "1"
+#            - name: CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS
+#              value: "kafka-broker.kafka-demo.svc.cluster.local:29092"
+#            - name: CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT
+#              value: "zookeeper.kafka-demo.svc.cluster.local:2181"
+#            - name: CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS
+#              value: "1"
+#            - name: CONFLUENT_METRICS_ENABLE
+#              value: "true"
+#            - name: CONFLUENT_SUPPORT_CUSTOMER_ID
+#              value: "anonymous"
+#          readinessProbe:
+#            exec:
+#              command:
+#                - sh
+#                - -c
+#                - "/usr/bin/kafka-topics --bootstrap-server localhost:29092 --list || exit 1"
+#            initialDelaySeconds: 20
+#            periodSeconds: 10
+#          volumeMounts:
+#            - name: kafka-data
+#              mountPath: /var/lib/kafka/data
+#      volumes:
+#        - name: kafka-data
+#          emptyDir: {}
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: kafka-broker
+#  namespace: kafka-demo
+#spec:
+#  selector:
+#    app: kafka-broker
+#  ports:
+#    - port: 29092
+#      targetPort: 29092
+#  type: ClusterIP
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: schema-registry
+#  namespace: kafka-demo
+#  labels:
+#    app: schema-registry
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: schema-registry
+#  template:
+#    metadata:
+#      labels:
+#        app: schema-registry
+#    spec:
+#      containers:
+#        - name: schema-registry
+#          image: confluentinc/cp-schema-registry:5.4.0
+#          ports:
+#            - containerPort: 8081
+#          env:
+#            - name: SCHEMA_REGISTRY_HOST_NAME
+#              value: "schema-registry.kafka-demo.svc.cluster.local"
+#            - name: SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL
+#              value: "zookeeper.kafka-demo.svc.cluster.local:2181"
+#            - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
+#              value: "PLAINTEXT://kafka-broker.kafka-demo.svc.cluster.local:29092"
+#          readinessProbe:
+#            httpGet:
+#              path: /subjects
+#              port: 8081
+#            initialDelaySeconds: 20
+#            periodSeconds: 10
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: schema-registry
+#  namespace: kafka-demo
+#spec:
+#  selector:
+#    app: schema-registry
+#  ports:
+#    - port: 8081
+#      targetPort: 8081
+#  type: ClusterIP
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: panda-vendor-service
+#  namespace: kafka-demo
+#  labels:
+#    app: panda-vendor-service
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: panda-vendor-service
+#  template:
+#    metadata:
+#      labels:
+#        app: panda-vendor-service
+#    spec:
+#      containers:
+#        - name: panda-vendor-service
+#          image: panda-vendor-service:latest
+#          ports:
+#            - containerPort: 5000
+#          env:
+#            - name: SPRING_APPLICATION_NAME
+#              value: "panda-vendor-management"
+#            - name: SERVER_PORT
+#              value: "5000"
+#            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+#              value: "http://hungry-panda-eureka-server:8761/eureka/"
+#            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+#              value: "kafka-broker.kafka-demo.svc.cluster.local:29092"
+#            - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
+#              value: "org.apache.kafka.common.serialization.StringSerializer"
+#            - name: SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER
+#              value: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+#            - name: SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL
+#              value: "http://schema-registry.kafka-demo.svc.cluster.local:8081"
+#            - name: SPRING_KAFKA_PROPERTIES_VALUE_SUBJECT_NAME_STRATEGY
+#              value: "io.confluent.kafka.serializers.subject.RecordNameStrategy"
+#            - name: SPRING_KAFKA_PROPERTIES_SPECIFIC_AVRO_READER
+#              value: "true"
+#            - name: AWS_ACCESS_KEY_ID_FILE
+#              value: "/run/secrets/aws_access"
+#            - name: AWS_SECRET_ACCESS_KEY_FILE
+#              value: "/run/secrets/aws_secret"
+#            - name: AWS_REGION
+#              value: "eu-central-1"
+#          volumeMounts:
+#            - name: aws-secrets
+#              mountPath: /run/secrets
+#              readOnly: true
+#          readinessProbe:
+#            httpGet:
+#              path: /actuator/health
+#              port: 5000
+#            initialDelaySeconds: 15
+#            periodSeconds: 10
+#            failureThreshold: 3
+#      volumes:
+#        - name: aws-secrets
+#          secret:
+#            secretName: aws-secrets
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: panda-vendor-service
+#  namespace: kafka-demo
+#spec:
+#  selector:
+#    app: panda-vendor-service
+#  ports:
+#    - port: 5000
+#      targetPort: 5000
+#  type: ClusterIP
