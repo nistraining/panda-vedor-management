@@ -5,8 +5,8 @@ metadata:
   name: aws-secrets
 type: Opaque
 data:
-  aws_access: QUtJQVhFRE5SRjMzVlBTUDVNT04NCg==
-  aws_secret: ZFNTZTlkN1FROFZocTV3cFcvSjBTRjRHVXlTMVZFcGxLcnpQQnYxSg0K
+  aws_access:
+  aws_secret:
 ---
 # ZooKeeper StatefulSet
 apiVersion: apps/v1
