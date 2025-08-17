@@ -34,7 +34,7 @@ public class VendorController {
     @Autowired
     private VendorLogService logService;
 	
-	@RequestMapping("/save")
+	@PostMapping("/save")
 	public ResponseEntity<Vendor> saveVendors(@RequestBody Vendor vendor){
 	Vendor vendors=	vendorService.saveVendor(vendor);
 	return new ResponseEntity<Vendor>(vendors,HttpStatus.CREATED);

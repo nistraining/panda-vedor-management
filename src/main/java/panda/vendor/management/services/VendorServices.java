@@ -21,7 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.extern.slf4j.Slf4j;
 import panda.vendor.management.dto.VendorBatchResponseDTO;
 import panda.vendor.management.entities.Vendor;
-import panda.vendor.management.exceptions.VendorNotFoundException;
+import panda.vendor.management.exceptions.VendorException;
+import panda.vendor.management.exceptions.Validator;
 import panda.vendor.management.repository.VendorRepository;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -43,6 +44,9 @@ public class VendorServices {
 	@Autowired
 	private VendorLogService logService;
 	
+	@Autowired
+	private Validator<Vendor> vendorValidator;
+	
 	private static final Logger log = LoggerFactory.getLogger(VendorServices.class);
 
 	@Autowired
@@ -50,6 +54,7 @@ public class VendorServices {
 	
 	public Vendor saveVendor(Vendor vendor) {
 		try {
+			vendorValidator.validate(vendor);
 			return vendorRepo.saveVendor(vendor);
 		}catch(DynamoDbException e) {
 			log.info("Error occurred while saving a vendor :",e.getMessage());
